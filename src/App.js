@@ -1,25 +1,36 @@
-import logo from './logo.svg';
-import './App.css';
+import "./styles/main.css";
+import "./styles/normalize.css";
 
-function App() {
+import useMovies from "./hooks/useMovies"; // Importing the custom hook
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import MovieList from "./components/MovieList";
+import Pagination from "./components/Pagination";
+import { BrowserRouter } from "react-router-dom"; 
+const App = () => {
+  const actorName = "Al Pacino"; // Actor name for search
+  const { movies, totalPage, loading, error, setCurrentPage } = useMovies(actorName);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>  
+    
+      <Header />
+      <MovieList movies={movies} loading={loading} />
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      <Pagination
+        totalPage={totalPage}
+        moviePerPage={10}
+        setCurrentPage={setCurrentPage}
+        loading={loading}  
+      />
+      <Footer />
+    
+    </BrowserRouter> 
   );
-}
+};
 
 export default App;
